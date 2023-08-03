@@ -2,6 +2,11 @@ import { buildSchema } from 'graphql';
 
 
 const schema = buildSchema(`
+    enum Sorting {
+        title
+        price
+        date
+    }   
     enum Category {
         all
         health
@@ -15,23 +20,24 @@ const schema = buildSchema(`
     }
     
     type Mutation {
-        login(user:UserInput):String
-        register(user:User):String
+        login(user:UserInput):token
+        register(user:User):token
         addBook(book:BookInput): BookResponse
         updateBook(id: ID!,book:BookInput): BookResponse
         deleteBook(id: ID!): BookResponse
     }
     
-    type SearchQuery {
+    input SearchQuery {
         limit:Int!
         minPrice:Float
         maxPrice:Float
         category:Category
         title:String
+        sortBy:Sorting
 
     }
  
-    type BookInput {
+    input BookInput {
         title: String!
         author: String!
         description: String!
@@ -39,17 +45,20 @@ const schema = buildSchema(`
         image:String!
     }
     
-    type User {
+    input User {
        fullName:String!
        email:String!
        password:String!
     }
 
-    type UserInput{
+    input UserInput{
         email:String!
         password:String!
     }
-
+    
+    type token {
+        token:String!
+    }
     
 
     type Book {

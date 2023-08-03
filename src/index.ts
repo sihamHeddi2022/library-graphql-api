@@ -8,16 +8,23 @@ import resolvers from './graphql/resolvers'
 
 
 import { graphqlHTTP } from 'express-graphql';
+import { verifyToken } from './middlware/auth';
 
 const app = express();
 
+app.use(verifyToken)
 
 app.use(
     "/api/graphql/",
     graphqlHTTP((request, response, graphQLParams) => ({
         schema,
         rootValue: resolvers,
-        graphiql: true
+        graphiql: true,
+        context: { request },
+        customFormatErrorFn: (err) => {
+
+          return err
+        }
     }))
 );
 
