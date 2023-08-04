@@ -34,6 +34,7 @@ const schema = buildSchema(`
         category:Category
         title:String
         sortBy:Sorting
+        page:Int!
 
     }
  
@@ -68,6 +69,9 @@ const schema = buildSchema(`
         description: String!
         price:Float!
         image:String!
+        createdAt:Int
+        updatedAt:Int
+        ownerID:Int
     }
 
     type Books {
@@ -76,8 +80,7 @@ const schema = buildSchema(`
 
     type BookResponse {
         data: Book
-        error: String
-        ok: Boolean
+       
     }
 `);
 

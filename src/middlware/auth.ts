@@ -16,15 +16,27 @@ export const verifyToken = async(req:Request | any,res:Response,next:NextFunctio
             if (err) {
                 const e = err as Error
                 if (e.name=="TokenExpiredError") {
-                    throw new AppError(401,"token expired")
+                    req.isAuth = false
+                    req.err = {
+                        status:401,
+                        message:"token expired"
+                    }
+                  return next()
  
                }
                else {
-                throw new AppError(401,"invalid token")
+                req.isAuth = false
+                req.err = {
+                    status:401,
+                    message:"invalid token"
+                }
+                return next()
+              
 
                }
     
           }
+          req.isAuth = true
           req.user = payload.id
           return next()
 
@@ -32,7 +44,13 @@ export const verifyToken = async(req:Request | any,res:Response,next:NextFunctio
 
     }
     else {
-       new AppError(401,"verify the authorization header")
+        req.isAuth = false
+        req.err = {
+            status:401,
+            message:"verify the authorization header"
+        }
+      return next()
+      
     }     
  
 } 

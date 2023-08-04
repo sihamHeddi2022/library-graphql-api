@@ -7,7 +7,7 @@ import { AppError } from "../../exception";
   export const login = async (user)=>{
    
     try {
-        const {email,password} = user.user        
+        const {email,password} = user       
         let  u:any = await prisma.user.findFirst({where:{ email: email}})
         if(!u) throw new AppError(401,"there is no user with that email")
         const answer =await  bcrypt.compare(password,u.password)
@@ -34,8 +34,7 @@ import { AppError } from "../../exception";
   
 
     try {
-        let {fullName ,email,password} = user.user
-    
+        let {fullName ,email,password} = user
         let  u = await prisma.user.findFirst({where:{ email: email}})
     
       if(u) throw new AppError(400,"email must be unique")
