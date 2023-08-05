@@ -2,86 +2,137 @@ import { buildSchema } from 'graphql';
 
 
 const schema = buildSchema(`
-    enum Sorting {
-        title
-        price
-        date
-    }   
-    enum Category {
-        all
-        health
-        environement
-        IT
-        novels
-    }
-    type Query {
-        books(s:SearchQuery): [Book]
-        book(id: ID!): Book
-    }
-    
-    type Mutation {
-        login(user:UserInput):token
-        register(user:User):token
-        addBook(book:BookInput): BookResponse
-        updateBook(id: ID!,book:BookInput): BookResponse
-        deleteBook(id: ID!): BookResponse
-    }
-    
-    input SearchQuery {
-        limit:Int!
-        minPrice:Float
-        maxPrice:Float
-        category:Category
-        title:String
-        sortBy:Sorting
-        page:Int!
+enum Sorting {
+    title
+    price
+    date
+}   
 
-    }
- 
-    input BookInput {
-        title: String!
-        author: String!
-        description: String!
-        price:Float!
-        image:String!
-    }
-    
-    input User {
-       fullName:String!
-       email:String!
-       password:String!
-    }
+enum TypeMsg {
+    error
+    success
+}
 
-    input UserInput{
-        email:String!
-        password:String!
-    }
-    
-    type token {
-        token:String!
-    }
-    
+enum Category {
+    all
+    health
+    environment
+    IT
+    novels
+}
 
-    type Book {
-        id: ID!
-        title: String!
-        author: String!
-        description: String!
-        price:Float!
-        image:String!
-        createdAt:Int
-        updatedAt:Int
-        ownerID:Int
-    }
+type Query {
+    books(s: SearchQuery): [Book]
+    book(id: ID!): Book
+    getOrdersOfUser: [Orders]
+}
 
-    type Books {
-        books: [Book]
-    }
+type Mutation {
+    updateStatusOrder(id: ID!, status: Boolean): String
+    createOrder(c: ClientInput, o: OrderInput): String
+    login(user: UserInput): Token
+    register(user: User): Token
+    addBook(book: BookInput): BookResponse
+    updateBook(id: ID!, book: BookInput): BookResponse
+    deleteBook(id: ID!): BookResponse
+}
 
-    type BookResponse {
-        data: Book
-       
-    }
+type Orders {
+    book: Book!
+    quantity: Int!
+    client:Client
+    id:ID!
+    status:Boolean!
+    createdAt:Int!
+}
+
+
+input OrderInput {
+    orders: [Order]
+}
+
+input Order {
+    bookID: Int!
+    quantity: Int!
+}
+
+type Client {
+    email: String!
+    FirstName: String!
+    LastName: String!
+    Country: String!
+    Street: String!
+    City: String!
+    State: String!
+    ZIP: Int!
+}
+
+input ClientInput {
+    email: String!
+    FirstName: String!
+    LastName: String!
+    Country: String!
+    Street: String!
+    City: String!
+    State: String!
+    ZIP: Int!
+}
+
+input SearchQuery {
+    limit: Int!
+    minPrice: Float
+    maxPrice: Float
+    category: Category
+    title: String
+    sortBy: Sorting
+    page: Int!
+}
+
+input BookInput {
+    title: String!
+    author: String!
+    description: String!
+    price: Float!
+    image: String!
+    stock: Int!
+}
+
+input User {
+    fullName: String!
+    email: String!
+    password: String!
+}
+
+input UserInput {
+    email: String!
+    password: String!
+}
+
+type Token {
+    token: String!
+}
+
+type Book {
+    id: ID!
+    title: String!
+    author: String!
+    description: String!
+    price: Float!
+    image: String!
+    createdAt: Int
+    updatedAt: Int
+    ownerID: Int
+    stock: Int
+}
+
+type Books {
+    books: [Book]
+}
+
+type BookResponse {
+    data: Book
+}
+
 `);
 
 export default schema;

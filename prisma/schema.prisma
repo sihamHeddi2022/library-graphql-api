@@ -21,6 +21,7 @@ model Book {
   ownerID Int
   price Float
   image String
+  stock Int 
   orders Order[]
 }
 
@@ -41,6 +42,7 @@ model Order {
   status Boolean  @default(false)
   book   Book @relation(fields: [bookID], references: [id])
   bookID  Int
+  quantity Int 
   client Client @relation(fields: [clientID], references: [id])
   clientID Int
 }

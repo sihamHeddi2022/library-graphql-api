@@ -1,11 +1,26 @@
 // import { addBook, deleteBook, getBookByID, getbooks, updateBook } from "../model/books";
 import { AppError } from "../exception";
 import { addBook, deleteBook, updateBook } from "../model/books";
+import { addOrder, getYourOrders } from "../model/orders";
 import { login, register } from "../model/users";
 
 
 
 const query = {
+  getOrdersOfUser:async(input,context)=>{
+    try {
+      console.log("azaa");
+      
+      if(!context.request.isAuth) throw new AppError(context.request.err.status,context.request.err.message)
+      return await getYourOrders({ownerID:context.request.user})
+
+       
+     } catch (error) {
+       console.log("ddsd ",error);
+       
+      throw error 
+     }
+  }
     // books: async ({limit}, context) => {
     //    return await getbooks(limit)
     // },
@@ -19,6 +34,9 @@ const query = {
 
 
 const mutation = {
+  createOrder:async(input,context)=>{
+      return await addOrder({client:input.c,orders:input.o.orders})
+  },
   login :  async (input, context) => {
     const token = await login(input.user)
     return {token:token}
@@ -27,9 +45,6 @@ const mutation = {
 
       const token =await register(input.user)
        return {token:token}
-   
-  
-
   },
     addBook: async (input, context) => {
       try {
