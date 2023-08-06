@@ -3,31 +3,81 @@ import { AppError } from "../../exception";
 
 
 
-// export const getbooks=async (limit:number)=>{
+export const getbooks=async (input)=>{
     
-//     try {
-//      const books = await prisma.book.findMany({take:limit})
-//     return books
-//     } catch (error) {
-//       throw error
-//     }
+    try {
+      const query:any = {}
+      
+      if(input.minPrice && input.maxPrice){
+        query.price = {
+          gte:input.minPrice,
+          lte:input.maxPrice
+        }
+      }
 
-//  }
+      if (input.title) {
+        query.title = {contains:input.title, mode: 'insensitive'}
+      }
+
+      if(input.category!="all") query.category = input.category
+      
+   
+      
+      const req:any = {}
+
+      req.take = input.limit
+      
+      if (input.page>1) req.skip = input.limit*(input.page-1) 
+      req.orderBy = {
+        [input.sortBy]:"desc"
+      }
+      req.where = query
+      
+      console.log(req);
+      
+      const books = await prisma.book.findMany({...req})
+    
+      return books
+    
+    } catch (error) {
+      console.log(error);
+      
+      throw error
+    }
+
+ }
  
  
+ export const getpopularBooks = async()=>{
+  try {
+    const books:any = await prisma.book.findMany({
+       orderBy:{
+         createdAt:"desc"
+       },
+      include:{
+          orders:true
+      }
+     })
 
-// export const getBookByID=async (id)=>{
+     return books.filter(book=>book.orders.length>=5)
+  } catch (error) {
+    console.log(error);
+    throw error
+  }
+ }
 
-//     try {
+export const getBookByUserID=async (id)=>{
+
+    try {
 
         
-//         const book = await prisma.book.findUnique({where:{ id: parseInt(id)}})
-//        return book
-//        } catch (error) {
-//          throw error
-//        }
+        const book = await prisma.book.findMany({where:{ ownerID: parseInt(id)}})
+       return book
+       } catch (error) {
+         throw error
+       }
 
-// }
+}
 
 export const addBook=async (input)=>{
    try {

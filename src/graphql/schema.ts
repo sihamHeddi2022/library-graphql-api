@@ -5,13 +5,8 @@ const schema = buildSchema(`
 enum Sorting {
     title
     price
-    date
+    createdAt
 }   
-
-enum TypeMsg {
-    error
-    success
-}
 
 enum Category {
     all
@@ -23,7 +18,8 @@ enum Category {
 
 type Query {
     books(s: SearchQuery): [Book]
-    book(id: ID!): Book
+    booksOfUser: [Book]
+    popularBooks:[Book]
     getOrdersOfUser: [Orders]
 }
 
@@ -95,6 +91,7 @@ input BookInput {
     price: Float!
     image: String!
     stock: Int!
+    category:Category!
 }
 
 input User {
@@ -119,8 +116,6 @@ type Book {
     description: String!
     price: Float!
     image: String!
-    createdAt: Int
-    updatedAt: Int
     ownerID: Int
     stock: Int
 }

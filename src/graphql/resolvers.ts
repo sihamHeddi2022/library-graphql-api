@@ -1,12 +1,15 @@
 // import { addBook, deleteBook, getBookByID, getbooks, updateBook } from "../model/books";
 import { AppError } from "../exception";
-import { addBook, deleteBook, updateBook } from "../model/books";
-import { addOrder, getYourOrders } from "../model/orders";
+import { addBook, deleteBook, getBookByUserID, getbooks, getpopularBooks, updateBook } from "../model/books";
+import { addOrder, getYourOrders, updateStatusOrder } from "../model/orders";
 import { login, register } from "../model/users";
 
 
 
 const query = {
+  popularBooks:async ()=>{
+      return await getpopularBooks()
+  },
   getOrdersOfUser:async(input,context)=>{
     try {
       console.log("azaa");
@@ -20,20 +23,26 @@ const query = {
        
       throw error 
      }
-  }
-    // books: async ({limit}, context) => {
-    //    return await getbooks(limit)
-    // },
-    // book: async ({id}, context) => {
-    //     console.log(typeof id);
+  },
+    books: async (input, context) => {
+       return await getbooks(input.s)
+    },
+    booksOfUser: async (input, context) => {
+       
+      if(!context.request.isAuth) throw new AppError(context.request.err.status,context.request.err.message)
 
-    //     return await getBookByID(id)     
-    // }
+        return await getBookByUserID(context.request.user)     
+    }
 };
 
 
 
 const mutation = {
+  updateStatusOrder:async (input,context)=>{
+    if(!context.request.isAuth) throw new AppError(context.request.err.status,context.request.err.message)
+
+    return await updateStatusOrder({...input,ownerID:context.request.user})
+  },
   createOrder:async(input,context)=>{
       return await addOrder({client:input.c,orders:input.o.orders})
   },

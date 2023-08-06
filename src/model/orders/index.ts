@@ -1,4 +1,5 @@
 import prisma from ".."
+import { AppError } from "../../exception"
 
 export const getYourOrders = async ({ownerID})=>{
 
@@ -22,13 +23,16 @@ export const getYourOrders = async ({ownerID})=>{
         }
        })
 
-    let orders = (userBooks.filter(e=>e.orders.length>0))
-     
-
-
-       console.log(orders);
+    let orders:any = (userBooks.filter(e=>e.orders.length>0)).map(e=>e.orders)
+     let r:any = []
+     for (let i = 0; i < orders.length; i++) {
+       r.push(orders[i][0])
+        
+     }
+   
+       console.log(r);
        
-       return orders     
+       return r     
        
    } catch (error) {
       console.log(error);
@@ -39,6 +43,7 @@ export const getYourOrders = async ({ownerID})=>{
 
 
 }
+
 
 
 export const addOrder=async ({client,orders})=>{
@@ -93,4 +98,26 @@ export const addOrder=async ({client,orders})=>{
         throw error
     }
 
+}
+
+
+export const  updateStatusOrder= async ({id,status,ownerID})=> {
+    try {
+        const order = await prisma.order.findFirstOrThrow({where:{id:parseInt(id)},include:{book:true}})
+        if(order){
+            if(order.book.ownerID != ownerID)  throw new AppError(401,"you are unauthorized to do this action")
+
+            await prisma.order.update({
+                where:{id:parseInt(id)},
+                data:{
+                    status
+                }
+            })
+            return "the status of your order was updated"
+        }
+    } catch (err) {
+        console.log(err);
+        throw err
+        
+    }
 }
