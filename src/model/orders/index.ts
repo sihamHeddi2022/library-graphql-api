@@ -48,7 +48,6 @@ export const getYourOrders = async ({ownerID})=>{
 
 export const addOrder=async ({client,orders})=>{
     try {
-        console.log(client);
         
         const c = await prisma.client.create({
             data:{
@@ -56,7 +55,8 @@ export const addOrder=async ({client,orders})=>{
             }
         })
         if (c) {
-            
+            console.log(c,orders);
+
             orders.forEach(async order => {
                 let o =  await prisma.order.create({
                     data:{

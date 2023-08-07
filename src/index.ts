@@ -13,7 +13,7 @@ import { verifyToken } from './middlware/auth';
 const app = express();
 
 app.use(verifyToken)
-
+app.use(cors())
 app.use(
     "/api/graphql/",
     graphqlHTTP((request, response, graphQLParams) => ({

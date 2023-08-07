@@ -17,7 +17,7 @@ enum Category {
 }
 
 type Query {
-    books(s: SearchQuery): [Book]
+    books(s: SearchQuery):Result
     booksOfUser: [Book]
     popularBooks:[Book]
     getOrdersOfUser: [Orders]
@@ -42,7 +42,10 @@ type Orders {
     createdAt:Int!
 }
 
-
+type Result {
+    books:[Book]!,
+    pages:Int!
+}
 input OrderInput {
     orders: [Order]
 }
@@ -118,6 +121,7 @@ type Book {
     image: String!
     ownerID: Int
     stock: Int
+    category:Category
 }
 
 type Books {

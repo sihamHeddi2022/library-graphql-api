@@ -4,7 +4,8 @@ import { AppError } from "../../exception";
 
 
 export const getbooks=async (input)=>{
-    
+  console.log("bn ","length");
+
     try {
       const query:any = {}
       
@@ -13,7 +14,7 @@ export const getbooks=async (input)=>{
           gte:input.minPrice,
           lte:input.maxPrice
         }
-      }
+      } 
 
       if (input.title) {
         query.title = {contains:input.title, mode: 'insensitive'}
@@ -32,12 +33,13 @@ export const getbooks=async (input)=>{
         [input.sortBy]:"desc"
       }
       req.where = query
+      const length = await (await prisma.book.findMany({...req.where})).length
       
-      console.log(req);
+      const pages:number = Math.ceil(length/input.limit) 
       
       const books = await prisma.book.findMany({...req})
-    
-      return books
+       
+      return {books,pages}
     
     } catch (error) {
       console.log(error);
