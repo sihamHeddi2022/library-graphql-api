@@ -11,8 +11,8 @@ export const getbooks=async (input)=>{
       
       if(input.minPrice && input.maxPrice){
         query.price = {
-          gte:input.minPrice,
-          lte:input.maxPrice
+          gte:parseFloat(input.minPrice),
+          lte:parseFloat(input.maxPrice)
         }
       } 
 
@@ -33,7 +33,10 @@ export const getbooks=async (input)=>{
         [input.sortBy]:"desc"
       }
       req.where = query
-      const length = await (await prisma.book.findMany({...req.where})).length
+      console.log("hello ",req.where);
+      
+      
+      const length = await (await prisma.book.findMany({where:req.where})).length
       
       const pages:number = Math.ceil(length/input.limit) 
       

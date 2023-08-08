@@ -22,7 +22,8 @@ app.use(
         graphiql: true,
         context: { request },
         customFormatErrorFn: (err) => {
-
+         console.log(err);
+         
           return err
         }
     }))
