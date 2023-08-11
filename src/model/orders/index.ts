@@ -30,12 +30,12 @@ export const getYourOrders = async ({ownerID})=>{
         
      }
    
-       console.log(r);
+    
        
        return r     
        
    } catch (error) {
-      console.log(error);
+   
       throw error
       
    }
@@ -55,8 +55,7 @@ export const addOrder=async ({client,orders})=>{
             }
         })
         if (c) {
-            console.log(c,orders);
-
+          
             orders.forEach(async order => {
                 let o =  await prisma.order.create({
                     data:{
@@ -103,6 +102,7 @@ export const addOrder=async ({client,orders})=>{
 
 export const  updateStatusOrder= async ({id,status,ownerID})=> {
     try {
+        
         const order = await prisma.order.findFirstOrThrow({where:{id:parseInt(id)},include:{book:true}})
         if(order){
             if(order.book.ownerID != ownerID)  throw new AppError(401,"you are unauthorized to do this action")

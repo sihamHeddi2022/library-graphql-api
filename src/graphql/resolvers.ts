@@ -44,6 +44,8 @@ const mutation = {
     return await updateStatusOrder({...input,ownerID:context.request.user})
   },
   createOrder:async(input,context)=>{
+    console.log("hghghg",input);
+    
       return await addOrder({client:input.c,orders:input.o.orders})
   },
   login :  async (input, context) => {
