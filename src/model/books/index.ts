@@ -64,7 +64,7 @@ export const getbooks=async (input)=>{
       }
      })
 
-     return books.filter(book=>book.orders.length>=5)
+     return books.filter(book=>book.orders.length>=2).slice(0,3)
   } catch (error) {
     console.log(error);
     throw error
@@ -74,8 +74,6 @@ export const getbooks=async (input)=>{
 export const getBookByUserID=async (id)=>{
 
     try {
-
-        
         const book = await prisma.book.findMany({where:{ ownerID: parseInt(id)}})
        return book
        } catch (error) {
